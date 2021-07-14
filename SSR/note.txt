@@ -1,5 +1,7 @@
 Server Side Render
 
+学习路径：（一） -> （二） -> （三四） -> （五六）
+
 注意：
 1. 没有在项目中引入的库需要全局安装；
 2. 使用中 vue 和 vue-server-renderer 有版本兼容问题；
@@ -30,4 +32,26 @@ learning-record\SSR\example\vue-ssr
 思考：以上的实现调试太麻烦了，需要将客户端、服务端代码都进行打包，然后启动服务（可以使用 nodemon 热更新）才可以查看效果
 ？？？如何解决
 
-五、nuxt 实践：
+五、nuxt 框架（前面 vue-ssr 项目的升级版，实现原理类似）
+
+问题：全局安装 create-nuxt-app 脚手架，使用脚手架 npx create-nuxt-app nuxt 安装项目；此时报错 -->
+npm ERR! Could not install from "Files\nodejs\npm_cache\_npx\42372" as it does not contain a package.json file.
+解决：npm 配置的 cache 路径中有空格，设置 npm config set cache "D:\Program~1\nodejs\npm_cache" 解决
+
+类似 vue-cli；
+技术栈：create-nuxt-app(3.7.x)、nuxt(2.15.x)、vue/core-js(3.15.x)、koa-router(10.0.x)、koa...
+项目同时编译 client、server；
+路由、全局组件定义... 只要文件放在规定位置会自动完成配置和定义；
+项目自定义功能配置地方：nuxt.config.js
+在组件中通过 head() 方法自定义设置网站标签名称、字体图标；
+
+六、nuxt 知识点
+路由组件编写，嵌套路由，路由传参，路由入口标签，路由链接...
+服务代理：只有首屏进行了服务器端渲染，其它页面都是跨域请求，所以开发环境下需要设置代理；
+页面的所有请求最好放在 asyncData 函数里面，这个函数是 Nuxt 框架独有的，专门为了 SEO 设计;
+/(.*)：匹配所有路径
+中间件：权限校验 auth；
+
+问题：create-nuxt-app 不同版本的脚手架创建的项目目录结构差不很大，类似 vueCli2 与vueCli3；
+
+七、打包、发布
