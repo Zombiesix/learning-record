@@ -1,0 +1,28 @@
+Server Side Render
+
+注意：
+1. 没有在项目中引入的库需要全局安装；
+2. 使用中 vue 和 vue-server-renderer 有版本兼容问题；
+
+一、介绍-了解：https://www.jianshu.com/p/b8cfa496b7ec
+总结：项目渲染方式分三种：
+1. 完全的客户端渲染，单页面应用首屏时获取所有的 JS 文件；
+2. 完全的服务器端渲染，代码全部放在服务器上，任何一个用户行为都会发送服务获取新的 html 页面，整个页面重新渲染；
+3. 客户端 + 服务器端渲染，服务器端负责首屏（非首页，时首次进入网站的页面）渲染，客户端激活（除首屏外都使用单页面路由方式）；
+
+二、首次尝试实例：
+learning-record\SSR\example\ssr\simple-ssr.js
+
+三、vue 项目中实例：（第 3 点的实现方式）
+learning-record\SSR\example\ssr\ssr.js
+learning-record\SSR\example\vue-ssr
+  总入口：app.js
+  服务端入口：server entry
+  客户端入口：client entry
+  webpack 分别打包 ==> server bundle（服务器端使用）、client bundle（客户端使用）
+  总结：使用 webpack 对 entry-client、entry-server 进行打包；启动 ssr.js 服务，会获取到首屏页面（包含首屏中所有的 DOM），html 中
+  还引入了样式文件、客户端打包的 js 文件（放在 html 最后面用于客户端激活，但不影响首屏页面的渲染 - defer）
+
+四、添加 store 状态管理
+
+五、nuxt 实践：
