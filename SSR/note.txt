@@ -3,6 +3,7 @@ Server Side Render
 注意：
 1. 没有在项目中引入的库需要全局安装；
 2. 使用中 vue 和 vue-server-renderer 有版本兼容问题；
+3. asyncData 在异步的使用需要使用
 
 一、介绍-了解：https://www.jianshu.com/p/b8cfa496b7ec
 总结：项目渲染方式分三种：
@@ -24,5 +25,9 @@ learning-record\SSR\example\vue-ssr
   还引入了样式文件、客户端打包的 js 文件（放在 html 最后面用于客户端激活，但不影响首屏页面的渲染 - defer）
 
 四、添加 store 状态管理
+类似 vueRouter 直接引入（有些问题需要注意）
+
+思考：以上的实现调试太麻烦了，需要将客户端、服务端代码都进行打包，然后启动服务（可以使用 nodemon 热更新）才可以查看效果
+？？？如何解决
 
 五、nuxt 实践：
