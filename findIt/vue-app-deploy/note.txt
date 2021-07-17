@@ -1,0 +1,37 @@
+HBuilder：打包软件（安装）
+
+社区、身份验证（使用HBuilder软件）：
+https://dev.dcloud.net.cn/app/index?type=0
+https://ask.dcloud.net.cn/account/setting/profile/
+
+Android调试/打包步骤：（vue app项目）
+https://baijiahao.baidu.com/s?id=1655878004078867586&wfr=spider&for=pc
+打包：
+项目只能打包后发送到 HBuilder 中创建的 H5 项目中，配置好 mainfest.json 后就可以使用云打包的方法打包 apk 下载文件；
+也可以打 debug 包，类似离线调试包；
+调试：
+文档：https://blog.csdn.net/zeternityyt/article/details/80154566
+电脑端需要安装手机驱动；手机端需要开启开发者模式；链接数据线即可将电脑端项目传送到手机端，手机上下载后即可运行调试；
+
+Android平台签名证书（.keystore）生成方式：
+使用CMD环境成功生成证书
+下载JRE8环境（不要用其它版本的JDK）
+jre1.8.0_201获取https://ask.dcloud.net.cn/article/38778 (测试成功)
+https://www.oracle.com/cn/java/technologies/javase/javase-jdk8-downloads.html (未测试)
+配置环境变量, 重启电脑
+查看java -version 版本
+生成步骤
+keytool -genkey -alias androidapp -keyalg RSA -keysize 2048 -validity 36500 -keystore androidapp.keystore
+keytool -importkeystore -srckeystore androidapp.keystore -destkeystore androidapp.keystore -deststoretype pkcs12
+keytool -list -v -keystore androidapp.keystore
+证书：androidapp
+密钥口令：gogo123
+其它信息随便写的
+
+Oracle用户账号：
+账号：jb_70807718@163.com
+密码：z79113Oracle,
+
+IOS端打包步骤:
+https://www.cnblogs.com/mica/p/10654050.html
+......
