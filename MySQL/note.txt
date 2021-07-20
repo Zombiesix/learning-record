@@ -1,0 +1,38 @@
+什么是持久化：保存在磁盘中就是数据持久化；断电数据不丢失。扩展：使用液氮将内存冻住，也可以保持数据持久化；
+
+持久化保存数据的四种方式：
+1. 文件存储
+  实例内容包含：数据读写、命令行开发
+2. mysql - 关系型数据库
+  使用 mysql2 库操作 mysql 数据库，其中 promise 模块用来支持异步；
+  扩展：sequelize 对象关系型映射，作用：无需编写 sql 数据库，直接操作对象即可；
+    sequelize：基于Promise的ORM(Object Relation Mapping)，是一种数据库中间件 支持多种数据库、
+    事务、关联等
+3. mongodb - 文档型数据库
+  未看
+4. redis - 键值对数据库
+  未看
+
+实战项目 shop；
+其中使用到的工具、知识点：
+1. elementUI 中的开始和结束动画；
+
+安装 mysql 方式：
+a. 安装 MySQL Community Downloads 版，傻瓜式安装；将 bin 文件夹设置为环境变量；
+b. 下载的 zip 文件，需要配置安装，见：https://www.cnblogs.com/zhangcaihua/p/11432133.html
+只有安装好了在 计算机管理 -> 服务和应用程序 -> 服务 中才能看到 MySQL
+使用 mysql --version 来检查是否安装成功
+注：登录需要先启动服务；修改密码需要先登录；
+
+扩展：（暂未看）
+数据库连接池文章：https://juejin.cn/post/6844904069962661896
+事务相关文章：https://juejin.cn/post/6844904077831192589
+
+mysql 的常用指令：
+https://blog.csdn.net/qq_35409127/article/details/79760797
+
+
+其它：
+正常开发时一般会安装很多环境，可以使用 docker，执行命令可以批量安装、启动...
+但是 window 上安装好像支持不行；
+还有 Adminer

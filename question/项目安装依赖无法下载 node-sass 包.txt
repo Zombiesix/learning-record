@@ -1,0 +1,19 @@
+问题一：
+
+一个下面从 GitHub 上 copy 下来时第一需要安装依赖
+
+在安装依赖的过程中一定会去 Github 上下载 node-sass 相关二进制文件，
+
+安装失败的原因：无法连接外网、无法连接/进入 GitHub
+
+1. 可以把指定的 node-sass 二进制文件下载到本地，在安装时指定
+
+2. 其它方法：OneNode 中搜索 node-sass；有几种解决方法；启动项目时报错，运行 npm rebuild node-sass ......
+
+问题二：
+错误：Unhandled rejection SequelizeConnectionError: Client does not support authentication protocol requested by server; consider upgrading MySQL client
+启动 backend，连接数据库的时候报错；
+解决方法：
+修改下密码：alter user 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '123456';
+然后：flush privileges;
+就可以了，感觉和修改密码没有关系，主要时后面的命令；
