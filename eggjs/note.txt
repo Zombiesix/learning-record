@@ -1,0 +1,42 @@
+eggjs：开源企业级 Node.js 框架
+开发后端应用
+其中集成一些 koa、koa-router、mysql等就能做后端全部功能
+一个企业级框架，主要是开发起来方便，其中的思想也就是下面的 1. 约定优于定义；2. 分层；
+
+一、使用体验：
+1. 约定（配置）优于定义；
+2. 分层；controller、service、model等层（类似 spring 框架）
+总结：router 负责匹配地址找到指定 controller；
+controller 中调用所有定义的 service；
+service 处理逻辑，调用 model 处理数据问题；
+
+example/egg：项目实例
+项目主要使用配置的方式，controller 中定义文件，在 router.js 中使用即可；
+service 文件创建了，直接全局使用即可；
+
+其中使用 mysql2 连接数据库（类似 SSH 中的 Hibernate）
+使用的 egg-sequelize 插件需要在 congfig/plugin.js 中配置好，并在 config.default.js 中配置上数据库的连接配置；这样项目即可使用 mysql；
+
+完了之后就可以定义 model，通过这个模型映射数据库表；
+
+二、简单实现 egg 框架
+1. 基于 koa、koa-router 实现，通过 loader 进行自动化路由注册；
+2. 在路由中匹配对象换成 controller；
+  上两步主要思路如下：
+  this.$app = new koa(conf) // 实例化
+  this.$ctrl = initController() // 初始化控制器，返回所有控制器
+  this.$router = initRouter(this) // 初始化路由 + 将控制器传入（url路径即可匹配到指定的控制器）
+  this.$app.use(this.$router.routes()) // 注册路由
+3. 加入 service 层；
+  修改需改两个地方：controller（其中需要通过 service 和 model 层交互）、router（同 controller）
+  controller：将 app 对象（其中包含了 service）传入
+  router：在 ctx 外再包裹一层 app，将 app 传入，也就有了 service
+4. 添加 sequelize、mysql2 数据库相关：
+  加载配置文件，将其中数据对象存在 app.$db 中
+  添加数据库模型 model 层
+5. 中间件的配置（再配置文件中配置）加载；
+  eg：加载 logger 日志中间件，每次服务的状态、执行时间；如：GET /user/ 200 14ms
+6. 定时任务：node-schedule（定时格式符合 Linux 的 crobtab；待看）
+  需要定时自动加载，执行
+
+三、基于 eggjs 的最佳实践

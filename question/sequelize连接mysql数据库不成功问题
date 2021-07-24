@@ -1,0 +1,11 @@
+错误：Unhandled rejection SequelizeConnectionError: Client does not support authentication protocol requested by server; consider upgrading MySQL client
+
+启动 backend，连接数据库的时候报错；
+
+解决方法：
+
+修改下密码：alter user 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '123456';
+
+然后：flush privileges;
+
+就可以了，感觉和修改密码没有关系，主要时后面的命令；
