@@ -1,0 +1,15 @@
+internal/modules/cjs/loader.js:983
+  throw err;
+  ^
+
+Error: Cannot find module 'D:\Program'
+    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:980:15)
+    at Function.Module._load (internal/modules/cjs/loader.js:862:27)
+    at Function.executeUserEntryPoint [as runMain] (internal/modules/run_main.js:74:12)
+    at internal/main/run_main_module.js:18:47 {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: []
+
+问题：是当前目录中存在空格的问题
+
+解决：

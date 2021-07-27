@@ -1,9 +1,10 @@
+https://eggjs.org/zh-cn/
 eggjs：开源企业级 Node.js 框架
 开发后端应用
 其中集成一些 koa、koa-router、mysql等就能做后端全部功能
 一个企业级框架，主要是开发起来方便，其中的思想也就是下面的 1. 约定优于定义；2. 分层；
 
-一、使用体验：
+一、使用体验 /egg/
 1. 约定（配置）优于定义；
 2. 分层；controller、service、model等层（类似 spring 框架）
 总结：router 负责匹配地址找到指定 controller；
@@ -19,7 +20,7 @@ service 文件创建了，直接全局使用即可；
 
 完了之后就可以定义 model，通过这个模型映射数据库表；
 
-二、简单实现 egg 框架
+二、简单实现 egg 框架 /myegg/
 1. 基于 koa、koa-router 实现，通过 loader 进行自动化路由注册；
 2. 在路由中匹配对象换成 controller；
   上两步主要思路如下：
@@ -39,4 +40,43 @@ service 文件创建了，直接全局使用即可；
 6. 定时任务：node-schedule（定时格式符合 Linux 的 crobtab；待看）
   需要定时自动加载，执行
 
-三、基于 eggjs 的最佳实践
+三、eggjs 的实践 egg-server
+使用 eggjs 开发后端接口
+egg-init egg-server --type=simple
+npm i
+npm run start：启动服务
+
+---project start
+1、用户管理模块 /controller/user.js
+
+添加服务、和公用工具实现：
+1) contract文件夹：模块接口的请求、响应内容描述（规定字段，展示实例）
+
+2) 接口文档（swagger格式）：自动化（使用 SwaggerDoc 插件）
+原理：通过自动读取注释生成
+a. npm i egg-swagger-doc-feat -S
+b. 【注】插件需要在 plugin.js、config.default.js 中进行配置
+自动生成的接口文档在 http://localhost:7001/swagger-ui.html 中【其中包含：接口文档、contract 请求描述 + 实例】
+【注】：如果注释中有一个单词写错了，接口文档的效果就不会出来
+【注】：contract 中 type 属性必须是小写的：eg：string 不是 String
+
+3) 增加异常处理中间件：error_handle.js（调用指定 api 执行代码中报错会在 swagger-ui 中打印出来）
+中间件在配置文件 config.default.js 中配置
+
+4) 实用 utility 函数 /extend/helper
+【注】：固定的文件夹，自动注册到 ctx 全局中
+
+5) 检查 使用 egg-validate 插件
+npm i egg-validate -s
+
+2、添加 Model 层，使用 mongoose 数据库
+使用 egg-mongoose 库/插件
+使用 egg-bcrypt 进行加密
+
+3、service 层，操作 model 数据层
+
+4、如何测试存在数据库操作的功能，比如：保存用户数据到 user 表
+第一次测试完成后，第二次可能就会因为存在此用户不能进行保存了（可以将表中数据删除，类似表数据回退，很不方便）
+解决：有一个方法可以在启动项目是将所有数据进行初始化，这样可以进行重复测试
+在项目根目录下创建 app.js，用于初始化数据
+技术实现：eggjs 项目的生命周期钩子，固定写在 app.js 中，启动项目会自动执行
