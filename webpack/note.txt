@@ -1,0 +1,60 @@
+学习版本：webpack@4.43.0， webpack-cli@3.3.12， webpack-devserver:@3.11.0
+
+在当前目录下执行 webpack，会调用全局的 webpack；可以使用 npx webpack 使用当前目录下的 webpack 进行打包
+
+output 输出 path 要求绝对路径
+
+eval 方法可直接执行 JS 代码
+
+一、认识 webpack，不使用 cli 工具的基本使用；
+... ...
+默认支持的模块只有 js、json
+--config：指定使用的配置文件
+多入口应用：
+  问：每个入口中都包含 jQuery.js，可以将 jQuery 不打包出每个 chunk 中，可以在每个入口 html 文件中引入；（使用插件）
+bundle：构建后产生的资源文件，
+chunk：
+chunks：
+module：
+插件的使用：
+  html-webpack-plugin：默认安装支持 webpack5，使用html-webpack-plugin@4 来安装支持 4 版本
+插件配置：
+  指定自定义的 html 模板，不是用默认的；
+  ......
+
+二、工程环境搭建
+.npmrc文件：可以指定安装依赖时的默认源地址
+registry=https://registry.npm.taobao.org
+
+loader 的使用：版本适配问题，webpack4 使用 5.2.6
+建议：一个 loader 只做一件事
+  css-loader@5.2.6：只做一件事，将 css 代码打包到 chunk 中，但不知道怎么使用，应用到结构中；对 css 进行序列化；
+  style-loader@2.0.0：将 css 样式应用上
+  less-loader@7.3.0：将 less 编译为 css
+为 loader 自定义配置 options：
+postcss-loader@4.2.0：工具集，使用 js 来处理 css，是一个插件集；类似 js 中的 babel。
+  需要加上 postcss
+  配置放在 postcss.config.js 文件（根目录下）中
+  autoprefixer：自动添加浏览器的前缀，postcss 中的插件，不是 webpack 的插件，不依赖 webpack 的版本；
+  cssnano：css 的压缩
+mini-css-extract-plugin@1.6.2插件：把 css 抽离成独立的文件；
+  使用其中自带的 loader 替换 style-loader；然后配置打包独立文件名
+
+browserslist：声明一段浏览器集合，输出兼容性的代码；
+  eg:"browserslist": [ "> 1%", "last 2 versions" ] 全球市场占有率大于 1% 的浏览器，兼容浏览器的最新 2 个大版本
+  可以写在 .browserslistrc 文件（根目录）中：eg：>1%  last 2 versions
+  使用 npx browserslist "last 2 version, >1%" 
+
+clean-webpack-plugin插件：打包时自动删除 dist 文件，生成最新打包文件；
+
+自定义实现 loader：def-loader.js
+  就是一个函数，将指定代码执行为需要的代码；对原来文件进行处理编译；
+  解决 loader 的路径问题（第三方 loader 直接写名字，会自动到 module 找）
+    在 webpack.config 中使用 resolveLoaders 属性（和 module 同级）
+    eg：resolveLoader: {
+      modules: ["node_modules", "./myLoader"] // 定义查找 loader 的目录
+    }
+
+实战：实现 css-loader、style-loader、less-loader（example/def-loader）
+element-ui 中有 .md 文件的 loader
+... ...
