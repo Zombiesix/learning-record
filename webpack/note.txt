@@ -46,6 +46,8 @@ browserslist：声明一段浏览器集合，输出兼容性的代码；
   使用 npx browserslist "last 2 version, >1%" 
 
 clean-webpack-plugin插件：打包时自动删除 dist 文件，生成最新打包文件；
+【注】：引入时必须是 CleanWebpackPlugin，否则如下错：
+  TypeError: clearwebpackplugin is not a constructor
 
 自定义实现 loader：def-loader.js
   就是一个函数，将指定代码执行为需要的代码；对原来文件进行处理编译；
@@ -58,3 +60,127 @@ clean-webpack-plugin插件：打包时自动删除 dist 文件，生成最新打
 实战：实现 css-loader、style-loader、less-loader（example/def-loader）
 element-ui 中有 .md 文件的 loader
 ... ...
+
+二、环境搭建
+静态资源：图片、第三方字体文件
+资源压缩、优化
+file-loader：将一个文件（包括图片文件）复制粘贴到另一个地方。将 file 资源放在指定文件夹下，返回一个输出路径；
+  【注】：在 webpack4 中可以使用 file-loader、url-loader... 在 5 中不使用
+使用 js、css 方式都需要 loader，因为打包时需要 webpack 编译（css 代码就需要编译，不是直接引入放到位置）
+  【注】：css 中图片引入路径问题：eg：url(../images/2.jpg) => url(asserts/images/2.jpg) 这个规则是在 webpack.config.js 中配置的
+    打包后图片可能不显示出来，这是路径问题
+    解决：配置 publicPath 属性配置
+
+问题：ERROR in ./asserts/styles/index.css
+Module build failed (from ./node_modules/style-loader/dist/cjs.js):
+TypeError: this.getOptions is not a function
+    at Object.loader (D:\Program Files\learning-record\webpack\example\demo1\node_modules\style-loader\dist\index.js:19:24)
+解决：style-loader、css-loader 和 webpack 的版本兼容问题
+
+url-loader：是 file-loader 的加强版，依赖 file-loader
+  会对图片途径转为 base64 格式
+  存在 limit 属性（字节单位），设置最大转 base64 的图片大小；大于这个设置值使用图片独立资源输出
+
+图片优化，压缩：
+image-webpack-loader：配合 url-loader、file-loader 使用，先于这些 loader 使用
+
+问题：ERROR in ./asserts/images/2.jpg
+Module build failed (from ./node_modules/image-webpack-loader/index.js):
+Error: Cannot find module 'imagemin-gifsicle'
+依赖安装失败
+解决：卸载后使用 cnpm 安装，然后成功；
+
+【webpack5】：
+中使用下面的 loader 替换 file-loader、url-loader
+asset 大于 8k，使用 resource，小于 使用 inline
+asset/resource 通用资源，类似 file-loader
+asset/inline 类似 url-loader
+使用方式：{
+  test: /\.png$/,
+  type: "asset/resource",
+  generator: {
+    filename: "[name][ext]"
+  }
+}
+
+第三方字体文件：也可以直接使用 file-loader 来进行处理，和图片一样因为都是文件，使用方式相同
+主要涉及点是字体文件，@font-face 的使用；
+
+项目中多入口（mpa 多页面）的使用：
+webpack.config.js 中可以定义，直接使用；
+但更常用的使用方式是写一个公用方法，自动生成 webpack 多页面代码；
+？？？多页面的使用场景
+
+二、功能
+ES5：webpack 原生支持
+ES6：webpack 原生支持
+ES7：async/await
+以后版本新功能不常用
+ES6及+、TS、Vue、React 等
+语法都需要编译
+【使用 babel】工具集（如果只使用了 @babel/core 打包其中的语法不会进行转换，具体转换的是其中的插件）（类似 postcss）
+js 的编译器：babeljs.cn
+配置文件 babel.config.js、.babelrc
+语法转换，不处理特性；特性通过 Ployfill 处理
+2021/8/3 最新版本 @babel/core7.x：此版本的目录结构不同，之前安装 babel 会安装其中多个模块；现在分开了，以 @babel/core、@babel/parser、babel-loader 等
+  支持 webpack4
+
+Presets预设，看成一组插件
+其中没有 vue 的 loader，vue 官方有自己的 vue-loader
+包含：@babel/preset-env 处理 ES6及+语法
+......
+
+？？？ES6语法和特性的区别：
+语法：箭头函数
+特性：Promise（在 IE 中不认识，需要通过 Ployfill 方式进行处理）
+
+Ployfill：方式：将不认识的特性提前加载
+@babel/ployfill：babel 7.4 版本下不建议使用：
+  【原因是 core-js 默认版本低，可能有些特性不支持；解决方法是直接安装其依赖的两个包（安装的就是最新版），效果一样】
+一个特性库，包含了所有的ES6及+的特性，所以安装时需要 -S
+加了这个特性库，打包后的代码大小会增加很多
+核心：core-js（特性库，默认版本2x，最新版本 3x（2021/8/3 包含的特性更全面））
+regenerator-runtime：
+如果做到按需引入特性：（这样打包后的文件大小就会减少很多）
+  方式：使用 @babel/preset-env 插件控制，
+  useBuiltIns 属性
+    usage - 全自动的检查，不需要写上 import "@babel/polyfill";
+    false - 引入polyfill时全部引入
+    entry - 会根据代码请求导出指定特性，需要在 JS 中引入 import "@babel/polyfill";
+1) polyfill使用 @babel/polyfill 进行优化后大小很小
+2) 如果使用 corejs3 的话是整个包使用，大小会比第一种方式要大一点；
+上面两种方式：各有有点和缺点，可以根据需求进行选择
+
+集成 React：
+安装 react、react-dom 框架核心代码
+使用 "@babel/preset-react" 插件（将 react 语法代码转为 js 代码）
+
+继承 Vue：
+vue-loader（集成 vue 的工具）、vue-template-complier（把 vue 语法变为 js 代码）
+【注】vue-template-complier：安装需要指定版本（每个版本的 vue 会对应一个模板编译库）
+... ...
+
+------------------------------------------------------------------------------
+插件 plugin，自定义插件
+CleanWebpackPlugin：清理整理 dist 文件夹
+
+自定义插件的流程
+compiler 实例化的 webpack 对象，包含配置等信息（原材料）
+
+webpack 理解为一个加工厂；src 源码就是原材料；
+自定义配置，配方【原材料进入到工程，按照配方生产】
+hook 表示流程线，大概有 20~30 个【每个流水线有指定功能，对产品进行处理】
+compilation 对象 === 通过原材料加工后的样子
+【总结】：webpack 自身源代码中包含很多个钩子函数，我们的插件会在这些钩子事件中注入我们要执行的任务；
+  比如：plugin1 =》在钩子 emit 上注册一个事件；
+    plugin2 =》在钩子 done 上注册一个事件；
+    ... ...
+  这样 webpack 在执行构建时，它的 Tapable 事件流会自动调用这些钩子，从而触发我们注入的方法，执行我们的自定义任务。
+https://www.cnblogs.com/qianxiaox/p/13826010.html 比较详细的介绍
+
+三、性能优化
+压缩、tree shaking、代码分割（分包、提取公共模块、利用浏览器缓存）
+按需加载、懒加载
+
+五、bundle 原理（打包过程，实现逻辑，简易版实现）
+
