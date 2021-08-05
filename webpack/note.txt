@@ -59,7 +59,8 @@ clean-webpack-plugin插件：打包时自动删除 dist 文件，生成最新打
 
 实战：实现 css-loader、style-loader、less-loader（example/def-loader）
 element-ui 中有 .md 文件的 loader
-... ...
+自定义 md-loader
+【需要引入一些依赖库】：transliteration、markdown-it-anchor、markdown-it-chain、markdown-it-container、vue-template-compiler、@vue/component-compiler-utils
 
 二、环境搭建
 静态资源：图片、第三方字体文件
@@ -183,4 +184,9 @@ https://www.cnblogs.com/qianxiaox/p/13826010.html 比较详细的介绍
 按需加载、懒加载
 
 五、bundle 原理（打包过程，实现逻辑，简易版实现）
-
+【demo2】
+1. 根据 webpack.config.js 配置文件，entry 属性知道入口文件（index.js）；
+  入口文件中是否有依赖（other.js），编译生成 index.js 的 chunk
+  然后进入依赖文件，编译生成 chunk      递归
+2. 根据 output 属性创建文件夹、文件
+... ...

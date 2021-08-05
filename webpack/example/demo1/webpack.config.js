@@ -69,6 +69,10 @@ module.exports = {
           //   ]
           // }
         }
+      },
+      {
+        test: /\.md$/,
+        use: "./def-loader/md-loader/index.js"
       }
     ]
   }

@@ -29,3 +29,8 @@
 // }
 
 // ReactDom.render(<App />, document.getElementById('app'))
+
+
+
+// 测试 .md loader
+import "../test.md"
